@@ -105,9 +105,21 @@ func toFirebaseMessage(m *message, auther auth.Auther) (*messaging.Message, erro
 			Priority: "high",
 		}
 	}
+	var apnsConfig = &messaging.APNSConfig{
+		Payload: &messaging.APNSPayload{
+			Aps: &messaging.Aps{
+				MutableContent: true,
+				Alert: &messaging.ApsAlert{
+					Title: m.Title,
+					Body:  m.Message,
+				},
+			},
+		},
+	}
 	return maybeTruncateFCMMessage(&messaging.Message{
 		Topic:   m.Topic,
 		Data:    data,
 		Android: androidConfig,
+		APNS:    apnsConfig,
 	}), nil
 }
